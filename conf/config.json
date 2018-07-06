@@ -1,0 +1,6 @@
+{
+    "mailTitle": "this is a test",
+    "formKeys": ["fullname", "email", "msg"],
+    "mailTo": "havaflag@gmail.com",
+    "topicName": "SlsFormMailTopic"
+}

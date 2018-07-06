@@ -1,0 +1,36 @@
+service: sls-form-mail
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: us-west-1
+#  stage: dev
+
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - "sns:Publish"
+      Resource: "arn:aws:sns:*:*:${self:custom.conf.topicName}"
+
+functions:
+  SendMail:
+    handler: handler.send_mail
+    events:
+      - http:
+          path: send
+          method: post
+          cors: true
+
+resources:
+  Resources:
+    MailQueue:
+      Type: AWS::SNS::Topic
+      Properties:
+        DisplayName: "Serverlss Form Mail"
+        TopicName: ${self:custom.conf.topicName}
+        Subscription:
+          - Endpoint: ${self:custom.conf.mailTo}
+            Protocol: "email"
+
+custom:
+  conf: ${file(conf/config.json)}
